@@ -55,8 +55,8 @@ You need nginx, and you need it compiled with LUA support. You also need to have
 Less is usually installed by running `npm install -g less`. I've actually just tested this and it pulled and
 installed `2.4.0` - things really are that simple. So obviously you need `npm`, which comes with `node`.
 
-Use the provided less.conf in nginx (copy it to `/etc/nginx/conf.d` perhaps), and include less files in your
-browser, like you would with css files.
+Use the provided less.conf in nginx (copy it to `/etc/nginx/conf.d` perhaps), restart your nginx instance, and include
+less files in your browser, like you would with css files. Edit them, save them, and refresh your pages.
 
 ```
 <link href="/css/main.less" rel="stylesheet">
