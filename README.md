@@ -30,24 +30,24 @@ files as they change. This causes various problems:
 
 1. The css and the less files are stored on disk, usually in the same folder (`main.css` and `main.less`).
 
-The `main.css` is generated and will be overwriten. It quickly happens that you are editing the wrong file
-where you will lose changes. Our goal is to have a single source file collection to minimize errors.
+   The `main.css` is generated and will be overwriten. It quickly happens that you are editing the wrong file
+   where you will lose changes. Our goal is to have a single source file collection to minimize errors.
 
 2. The CSS might be out of date
 
-We keep introducing dependencies. Are all developers using the same editor, and do they have the plugin installed?
-Is grunt running and compiling our files? There's a very short time between somebody saving a less file, and
-the developers are quick with their ALT+TAB & F5. It really might be more work than it's worth.
+   We keep introducing dependencies. Are all developers using the same editor, and do they have the plugin installed?
+   Is grunt running and compiling our files? There's a very short time between somebody saving a less file, and
+   the developers are quick with their ALT+TAB & F5. It really might be more work than it's worth.
 
 3. Versioning
 
-While we version our deploys, purely to provide answers to two common questions like "__Does the deployed version
-in production match the version in our staging environment?__" and "__We somehow managed to create a critical bug,
-can we revert the deploy to the previous version?__".
+   While we version our deploys, purely to provide answers to two common questions like "__Does the deployed version
+   in production match the version in our staging environment?__" and "__We somehow managed to create a critical bug,
+   can we revert the deploy to the previous version?__".
 
-Most importantly, we don't want to version generated resources with source control. We want to version the sources
-(LESS) and not the generated outputs. Setting up `.gitignore` files is simple enough, but not having to set them up
-is easier.
+   Most importantly, we don't want to version generated resources with source control. We want to version the sources
+   (LESS) and not the generated outputs. Setting up `.gitignore` files is simple enough, but not having to set them up
+   is easier.
 
 ## Ok, you convinced me - what do I need?
 
