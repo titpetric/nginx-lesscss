@@ -17,7 +17,7 @@ By using `less.js` it is possible to write LESS and have it rendered in the brow
 for development, you don't want to do it for production - it introduces a new dependency and processes everything
 on the browser side. An accepted practice is to generate CSS files from LESS, minify them and deploy them in production.
 
-The same should apply also for development.
+__The same should apply also for development.__
 
 I asume that some of you are generating your files with `lessc index.less > index.css` or something similar, and
 are looking for a better solution. You are very much familiar with the pain points of generating these files and
