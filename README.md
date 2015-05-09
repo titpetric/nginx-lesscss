@@ -1,6 +1,6 @@
-# Process LESS with nginx
+# Process LESS/SCSS/SASS with nginx
 
-## What exactly is LESS?
+## What exactly is LESS/SASS/...?
 
 In the words their authors:
 
@@ -11,7 +11,10 @@ In the words their authors:
 By writing LESS you are improving readability of your CSS code and are also opening CSS snippets for reuse on projects.
 It's a good choice if you want to maintain a core set of CSS and use it in a systematic way for all your projects.
 
-## Why process it on the server side?
+SASS/SCSS is just a different tool which does the same thing, but in a different way. In my eyes, there is no clear
+winner, and it comes down to personal preference. It's like tabs vs. spaces.
+
+## Why process less on the server side?
 
 By using `less.js` it is possible to write LESS and have it rendered in the browser. While this is usually fine
 for development, you don't want to do it for production - it introduces a new dependency and processes everything
@@ -51,15 +54,19 @@ files as they change. This causes various problems:
 
 ## Ok, you convinced me - what do I need?
 
-You need nginx, and you need it compiled with LUA support. You also need to have `less` installed somewhere.
-Less is usually installed by running `npm install -g less`. I've actually just tested this and it pulled and
-installed `2.4.0` - things really are that simple. So obviously you need `npm`, which comes with `node`.
+You need nginx, and you need it compiled with LUA support, with lua-socket extension. You also need to have `less` or
+`sass` installed somewhere. Less is usually installed by running `npm install -g less`. I've actually just tested this
+and it pulled and installed `2.5.0` - things really are that simple. So obviously you need `npm`, which comes with
+`node`. Or if you use `sass` it's installable as a ruby gem in the form of `gem install sass`.
 
-Use the provided less.conf in nginx (copy it to `/etc/nginx/conf.d` perhaps), restart your nginx instance, and include
-less files in your browser, like you would with css files. Edit them, save them, and refresh your pages.
+Use the provided less/sass/scss.conf in nginx (copy it to `/etc/nginx/conf.d` perhaps), restart your nginx instance,
+and use less/scss/sass files in your browser, like you would with css files. Edit them, save them, and refresh your
+pages.
 
 ```
 <link href="/css/main.less" rel="stylesheet">
+<link href="/css/main.sass" rel="stylesheet">
+<link href="/css/main.scss" rel="stylesheet">
 ```
 
 ## Thanks
