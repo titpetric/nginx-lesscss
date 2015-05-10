@@ -1,24 +1,21 @@
-# Process LESS/SCSS/SASS with nginx
+# Server side processing with nginx/lua
 
-## What exactly is LESS/SASS/...?
+This whole thing started as a server-side LESS -> CSS converter. And then I added SASS and SCSS.
+I will not lie to myself and I think I will add a couple of other converters in time.
 
-In the words their authors:
+Right now, the list is as follows:
 
-> Less is a CSS pre-processor, meaning that it extends the CSS language, adding features that allow variables,
-  mixins, functions and many other techniques that allow you to make CSS that is more maintainable, themable
-  and extendable.
+* LESS - using npm/less converter (`npm install -g less`)
+* SASS and SCSS - using ruby gem (`gem install sass`)
+* ES6 to ES5 - using npm/es6-transpiler (`npm install es6-transpiler`)
 
-By writing LESS you are improving readability of your CSS code and are also opening CSS snippets for reuse on projects.
-It's a good choice if you want to maintain a core set of CSS and use it in a systematic way for all your projects.
+Feel free to suggest any other thing you'd like to conver on server side.
 
-SASS/SCSS is just a different tool which does the same thing, but in a different way. In my eyes, there is no clear
-winner, and it comes down to personal preference. It's like tabs vs. spaces.
 
-## Why process less on the server side?
+## Motivation behind the project
 
-By using `less.js` it is possible to write LESS and have it rendered in the browser. While this is usually fine
-for development, you don't want to do it for production - it introduces a new dependency and processes everything
-on the browser side. An accepted practice is to generate CSS files from LESS, minify them and deploy them in production.
+In general, writing LESS/SASS and ES6 gives you some aesthetic and practical benefits.
+An accepted practice is to generate the CSS/JS and other files, minify them and deploy them in production.
 
 __The same should apply also for development.__
 
@@ -26,51 +23,65 @@ I asume that some of you are generating your files with `lessc index.less > inde
 are looking for a better solution. You are very much familiar with the pain points of generating these files and
 what suffering it brings. You really should skip a few solutions which are better, but have other pitfalls.
 
-A not uncommon practice I've seen around is to generate the css files when the less files change.
-Some people try to do this in an editor like (Sublime Text)[https://github.com/timdouglas/sublime-less2css]
-while others use tools like (Grunt)[https://github.com/gruntjs/grunt-contrib-less] to watch and compile
-files as they change. This causes various problems:
+* Editors/IDE include build hooks to generate css from less/sass ([Sublime Text](https://github.com/timdouglas/sublime-less2css))
+* Monitor file changes and run conversions ([Grunt](https://github.com/gruntjs/grunt-contrib-less))
+* Client side dependencies like `less.js` take care of rendering less in the browser
 
-1. The css and the less files are stored on disk, usually in the same folder (`main.css` and `main.less`).
+All of these are quite hack-ish ways to do what the server should be doing for you. You want to have your development
+environment as close as possible to the production environment. Sure, you will still generate css and javascript files
+in the production - but should you adapt your development process to include build hooks in your editors, client side
+dependencies which might be out of date, and generally make developers lives harder?
 
-   The `main.css` is generated and will be overwriten. It quickly happens that you are editing the wrong file
-   where you will lose changes. Our goal is to have a single source file collection to minimize errors.
+The only difference between development and production in this case should be only the extension of the file
+you're loading in the browser. Load `.less`, `.sass` and other files in development, and load `.css` and other
+in production.
 
-2. The CSS might be out of date
+1. Only version and keep source files on disk (no generated files)
 
-   We keep introducing dependencies. Are all developers using the same editor, and do they have the plugin installed?
-   Is grunt running and compiling our files? There's a very short time between somebody saving a less file, and
-   the developers are quick with their ALT+TAB & F5. It really might be more work than it's worth.
+   Most tools just generate additional files in the same folders. This way main.less becomes main.css and so on.
+   It causes valuable time to the developer to exclude these files from source control, and to pay attention not
+   to open and edit the wrong file.
 
-3. Versioning
+2. The files might differ from developer machine to other dev machine
 
-   While we version our deploys, purely to provide answers to two common questions like "__Does the deployed version
-   in production match the version in our staging environment?__" and "__We somehow managed to create a critical bug,
-   can we revert the deploy to the previous version?__".
+   Converting the files on the server side actually simplifies the development process in teams. You can be sure
+   that correct versions of software are being used, you can use server-side features not available in browsers,
+   and you don't have to keep developers up to date with more and more client side dependencies.
 
-   Most importantly, we don't want to version generated resources with source control. We want to version the sources
-   (LESS) and not the generated outputs. Setting up `.gitignore` files is simple enough, but not having to set them up
-   is easier.
+3. Use advanced features not available in browsers
+
+   With ES6 to ES5 transpiler it's possible to develop with next generation JavaScript language syntax. Using
+   LESS you can use the `image-width` and other mixins which are not available in browsers. In theory you can
+   use resources that are not available on the client side - most notably, databases.
+
+Server-side processing is nothing new. Perl has been doing it for years, and so has PHP, python, ruby and a plethora
+of other programming languages. Since there is a distinct lack of support for LESS, SASS and currently even ES6
+in any of the top-tier browsers, I see a solution for it by using the same approach as with programming languages.
+
+In practice, any script than converts X to Y can be run on server side.
 
 ## Ok, you convinced me - what do I need?
 
-You need nginx, and you need it compiled with LUA support, with lua-socket extension. You also need to have `less` or
-`sass` installed somewhere. Less is usually installed by running `npm install -g less`. I've actually just tested this
-and it pulled and installed `2.5.0` - things really are that simple. So obviously you need `npm`, which comes with
-`node`. Or if you use `sass` it's installable as a ruby gem in the form of `gem install sass`.
+You need:
 
-Use the provided less/sass/scss.conf in nginx (copy it to `/etc/nginx/conf.d` perhaps), restart your nginx instance,
-and use less/scss/sass files in your browser, like you would with css files. Edit them, save them, and refresh your
-pages.
+- nginx compiled with LUA support
+- lua-socket extension (not critical, can be excluded if you're willing to modify the configs)
+- converter scripts (less, sass, es6toes5,...)
+- various selection of the following: `node`, `npm`, `ruby`, `gem`.
+
+Use the provided less/sass/scss/es6.conf in nginx (copy it to `/etc/nginx/conf.d` perhaps), restart your nginx
+instance, and use less/scss/sass/es6 files in your browser, like you would with css files. Edit them, save them,
+and refresh your pages.
 
 ```
 <link href="/css/main.less" rel="stylesheet">
 <link href="/css/main.sass" rel="stylesheet">
 <link href="/css/main.scss" rel="stylesheet">
+<script src="/js/main.es6"></script>
 ```
 
 ## Thanks
 
-You are great if you read all this instead of just using the code.
+You are great if you read all this instead of just using the code. I'm sorry for ranting so much.
 
 Send me an email/paypal at black@scene-si.org if you feel thankful.
