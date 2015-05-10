@@ -9,7 +9,7 @@ Right now, the list is as follows:
 * SASS and SCSS - using ruby gem (`gem install sass`)
 * ES6 to ES5 - using npm/es6-transpiler (`npm install es6-transpiler`)
 
-Feel free to suggest any other thing you'd like to conver on server side.
+Feel free to suggest any other thing you'd like to convert on the server side.
 
 
 ## Motivation behind the project
