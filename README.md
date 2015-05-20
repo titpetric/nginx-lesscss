@@ -7,10 +7,25 @@ Right now, the list is as follows:
 
 * LESS - using npm/less converter (`npm install -g less`)
 * SASS and SCSS - using ruby gem (`gem install sass`)
-* ES6 to ES5 - using npm/es6-transpiler (`npm install es6-transpiler`)
+* ES6 to ES5 - using npm/es6-transpiler or npm/babel (`npm install -g es6-transpiler/babel`)
 
 Feel free to suggest any other thing you'd like to convert on the server side.
 
+
+## Note on ES6 transpiling
+
+Generally the transpilers are quite slow. A simple test file needs about 700-800ms on my dev server with es6-transpiler
+and babel performed worse, with about 1100ms. As such it is not *very* usable. Transpiler speeds may/will improve
+in the future, but until then be mindful about which transpiler you use, and try to stick with the faster ones.
+
+## Caching
+
+The settings here don't perform any caching. Due to the nature of less/css/* files, it is also impossible to add a
+caching layer that would be fully aware of dependencies outside of your main entry file. In the case of less it would
+mean every other less source file, and image resources which could be loaded by mixins like `image-width`.
+The main strategy of the configs is to provide missing nginx CGI functionality via the LUA extension. As such,
+caching is not the main objective of this project and any output is generated on the fly. It is also a good reason
+why this shouldn't be used in production, but only development environments (where feasible).
 
 ## Motivation behind the project
 
